@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:flawless-smile-hub.lovable.app)",
+      "Bash(npm install:*)",
+      "Bash(grep -E \"\\(tailwind|package\\\\.json\\)$\")",
+      "Bash(npm run:*)",
+      "Bash(wc -l /c/Users/глебчик/Desktop/flawless-smile-hub/src/components/*.tsx)",
+      "Bash(ls -lh /c/Users/глебчик/Desktop/flawless-smile-hub/src/components/*.tsx)",
+      "Read(//c/Users/глебчик/Desktop/flawless-smile-hub/**)",
+      "Bash(xargs wc:*)",
+      "Bash(claude mcp:*)",
+      "Skill(update-config)",
+      "Skill(update-config:*)",
+      "WebFetch(domain:hollywoodsmile.ru)",
+      "Bash(node -e \":*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:composio.dev)",
+      "Bash(npx skills:*)",
+      "Bash(ls \"c:/Users/глебчик/Desktop/flawless-smile-hub/src/assets/\"*.webp)",
+      "Bash(npx tsc:*)"
+    ]
+  }
+}
