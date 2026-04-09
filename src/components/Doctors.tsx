@@ -1,15 +1,15 @@
 import { ScrollReveal } from "./ScrollReveal";
 
 // Imports with Cyrillic/spaced filenames via Vite asset URL
-import prokopenko from "@/assets/фото врачей без фона/Прокопенко Татьяна Маратовна.png";
-import shovgenov from "@/assets/фото врачей без фона/Шовгенов Тембот Нальбиевич.png";
-import podoprigora from "@/assets/фото врачей без фона/Подопригора Оксана Викторовна.png";
-import natalia from "@/assets/фото врачей без фона/наталья игоревна.png";
-import alisultanov from "@/assets/фото врачей без фона/Алисултанов Арсен Русланович.png";
-import gayane from "@/assets/фото врачей без фона/Гаяне альбертовна.png";
-import adam from "@/assets/фото врачей без фона/Адам Аскорбиевич.png";
-import tuguz from "@/assets/фото врачей без фона/Тугуз Зарема Байрамовна.png";
-import zelimkhan from "@/assets/фото врачей без фона/зелемхан.png";
+import prokopenko from "@/assets/фото врачей без фона/Прокопенко Татьяна Маратовна.webp";
+import shovgenov from "@/assets/фото врачей без фона/Шовгенов Тембот Нальбиевич.webp";
+import podoprigora from "@/assets/фото врачей без фона/Подопригора Оксана Викторовна.webp";
+import natalia from "@/assets/фото врачей без фона/наталья игоревна.webp";
+import alisultanov from "@/assets/фото врачей без фона/Алисултанов Арсен Русланович.webp";
+import gayane from "@/assets/фото врачей без фона/Гаяне альбертовна.webp";
+import adam from "@/assets/фото врачей без фона/Адам Аскорбиевич.webp";
+import tuguz from "@/assets/фото врачей без фона/Тугуз Зарема Байрамовна.webp";
+import zelimkhan from "@/assets/фото врачей без фона/зелемхан.webp";
 
 const doctors = [
   {
@@ -108,6 +108,8 @@ export const Doctors = () => {
                   <img
                     src={doc.image}
                     alt={doc.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
                   />
                 </div>

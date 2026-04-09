@@ -61,7 +61,7 @@ const FaqItem = ({ q, a }: { q: string; a: string }) => {
 };
 
 export const FAQ = () => (
-  <section className="py-16 md:py-20 relative overflow-hidden" style={{ background: "linear-gradient(135deg, hsl(0 65% 97%) 0%, hsl(0 0% 100%) 40%, hsl(0 60% 95%) 70%, hsl(10 70% 96%) 100%)" }}>
+  <section className="py-10 md:py-20 relative overflow-hidden" style={{ background: "linear-gradient(135deg, hsl(0 65% 97%) 0%, hsl(0 0% 100%) 40%, hsl(0 60% 95%) 70%, hsl(10 70% 96%) 100%)" }}>
       {/* Radial glows */}
       <div className="absolute inset-0 pointer-events-none" style={{ background: "radial-gradient(ellipse at 0% 50%, hsl(0 75% 60% / 0.12) 0%, transparent 55%), radial-gradient(ellipse at 100% 20%, hsl(0 65% 55% / 0.08) 0%, transparent 50%), radial-gradient(ellipse at 60% 100%, hsl(10 80% 65% / 0.07) 0%, transparent 45%)" }} />
       {/* Dot grid */}
@@ -71,7 +71,7 @@ export const FAQ = () => (
       <div className="grid lg:grid-cols-[1fr_1.6fr] gap-12 items-start">
         <ScrollReveal animation="left">
           <p className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">FAQ</p>
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground leading-[1.1] mb-6">
+          <h2 className="text-2xl md:text-4xl font-bold text-foreground leading-[1.1] mb-4 md:mb-6">
             Часто задаваемые вопросы
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-8">
@@ -79,7 +79,7 @@ export const FAQ = () => (
           </p>
           <a
             href="tel:+79282919455"
-            className="inline-flex items-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90"
+            className="inline-flex items-center justify-center gap-2 rounded-xl px-6 py-3.5 text-sm font-semibold text-white transition-opacity hover:opacity-90 w-full sm:w-auto"
             style={{ backgroundColor: "hsl(0 65% 46%)" }}
           >
             Задать вопрос

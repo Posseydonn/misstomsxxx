@@ -1,6 +1,5 @@
 import { ScrollReveal } from "./ScrollReveal";
-import clinicConsultation from "@/assets/clinic-consultation.jpg";
-import clinicVideo from "@/assets/IMG_5126.MOV";
+import clinicConsultation from "@/assets/clinic-consultation.webp";
 import { Check, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -14,7 +13,7 @@ const features = [
 
 export const About = () => {
   return (
-    <section id="about" className="py-16 md:py-24 overflow-hidden" style={{ background: "linear-gradient(135deg, hsl(0 60% 97%) 0%, hsl(0 0% 100%) 50%, hsl(168 50% 96%) 100%)" }}>
+    <section id="about" className="py-10 md:py-24 overflow-hidden" style={{ background: "linear-gradient(135deg, hsl(0 60% 97%) 0%, hsl(0 0% 100%) 50%, hsl(168 50% 96%) 100%)" }}>
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-12 xl:gap-20 items-center">
 
@@ -22,7 +21,7 @@ export const About = () => {
           <div>
             <ScrollReveal delay={100}>
               <p className="text-sm font-semibold uppercase tracking-widest mb-4" style={{ color: "hsl(168 76% 42%)" }}>О клинике</p>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-6" style={{ color: "hsl(215 50% 12%)" }}>
+              <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold leading-[1.1] mb-4 md:mb-6" style={{ color: "hsl(215 50% 12%)" }}>
                 Мы делаем стоматологию<br />
                 <span style={{ color: "hsl(0 65% 51%)" }}>комфортной</span> и предсказуемой
               </h2>
@@ -49,7 +48,7 @@ export const About = () => {
             <ScrollReveal delay={300}>
               <Link
                 to="/contacts"
-                className="inline-flex items-center gap-2 rounded-xl px-10 py-5 text-lg font-semibold text-white transition-all duration-200 hover:opacity-90 group"
+                className="inline-flex items-center justify-center gap-2 rounded-xl px-10 py-5 text-lg font-semibold text-white transition-all duration-200 hover:opacity-90 group w-full sm:w-auto"
                 style={{ backgroundColor: "hsl(0 65% 51%)" }}
               >
                 Записаться на консультацию
@@ -62,13 +61,13 @@ export const About = () => {
           <ScrollReveal animation="right" delay={150}>
             <div className="relative flex justify-center">
 
-              {/* Декоративные кольца */}
+              {/* Декоративные кольца — только от sm */}
               <div
-                className="absolute -top-6 -right-6 w-56 h-56 rounded-full pointer-events-none"
+                className="hidden sm:block absolute -top-6 -right-6 w-56 h-56 rounded-full pointer-events-none"
                 style={{ border: "1.5px solid hsl(168 76% 42% / 0.18)" }}
               />
               <div
-                className="absolute -bottom-4 -left-4 w-36 h-36 rounded-full pointer-events-none"
+                className="hidden sm:block absolute -bottom-4 -left-4 w-36 h-36 rounded-full pointer-events-none"
                 style={{ border: "1px dashed hsl(0 65% 51% / 0.15)" }}
               />
 
@@ -78,7 +77,8 @@ export const About = () => {
                 style={{ boxShadow: "0 24px 64px hsl(215 50% 12% / 0.18)" }}
               >
                 <video
-                  src={clinicVideo}
+                  src="/clinic-video.mov"
+                  preload="none"
                   poster={clinicConsultation}
                   controls
                   playsInline

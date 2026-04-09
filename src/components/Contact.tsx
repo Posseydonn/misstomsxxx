@@ -71,14 +71,14 @@ export const Contact = () => {
   };
 
   return (
-    <section id="contacts" className="py-16 md:py-20 bg-surface">
+    <section id="contacts" className="py-10 md:py-20 bg-surface">
       <div className="container mx-auto px-6">
         <div className="overflow-hidden rounded-3xl shadow-elevated" style={{ minHeight: 480 }}>
           <div className="grid grid-cols-1 lg:grid-cols-2 h-full">
 
             {/* ── LEFT: Red panel ── */}
             <div
-              className="relative flex flex-col justify-between p-8 md:p-12"
+              className="relative flex flex-col justify-between p-6 md:p-12"
               style={{ background: "linear-gradient(160deg, hsl(0 65% 46%) 0%, hsl(0 72% 34%) 100%)" }}
             >
               {/* dot grid overlay */}
@@ -91,7 +91,7 @@ export const Contact = () => {
                 <p className="text-xs font-semibold uppercase tracking-widest mb-4" style={{ color: "hsl(0 0% 100% / 0.55)" }}>
                   Контакты
                 </p>
-                <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight mb-10">
+                <h2 className="text-2xl md:text-4xl font-bold text-white leading-tight mb-6 md:mb-10">
                   Запишитесь на<br />бесплатную<br />консультацию
                 </h2>
 
@@ -130,7 +130,7 @@ export const Contact = () => {
             </div>
 
             {/* ── RIGHT: Tabbed panel ── */}
-            <div className="bg-background flex flex-col p-8 md:p-12">
+            <div className="bg-background flex flex-col p-6 md:p-12">
 
               {/* Tabs */}
               <div className="flex gap-1 p-1 rounded-xl mb-8" style={{ backgroundColor: "hsl(215 20% 95%)" }}>

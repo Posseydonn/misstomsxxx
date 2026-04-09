@@ -265,7 +265,24 @@ html {
   font-size: 17px;
 }
 
-/* Active scale for buttons */
-button:active, a:active {
-  transform: scale(0.97);
+/* Prevent horizontal overflow on mobile */
+body {
+  overflow-x: hidden;
+}
+
+/* Active scale for buttons — только на touch */
+@media (hover: none) {
+  button:active, a:active {
+    transform: scale(0.96);
+  }
+}
+@media (hover: hover) {
+  button:active, a:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Touch targets: минимум 44px */
+a, button {
+  touch-action: manipulation;
 }

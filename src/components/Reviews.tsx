@@ -49,12 +49,12 @@ export const Reviews = () => {
   }, []);
 
   return (
-    <section id="reviews" className="py-12 md:py-16">
+    <section id="reviews" className="py-10 md:py-16">
       <div className="container mx-auto px-6">
         <ScrollReveal>
-          <div className="max-w-2xl mb-16">
+          <div className="max-w-2xl mb-8 md:mb-16">
             <p className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Отзывы</p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1]">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1]">
               Что говорят наши пациенты
             </h2>
           </div>
@@ -63,7 +63,7 @@ export const Reviews = () => {
         <div className="grid md:grid-cols-2 gap-6">
           {reviews.map((review, i) => (
             <ScrollReveal key={review.name} delay={i * 100}>
-              <div className="bg-background rounded-2xl p-8 shadow-card hover:shadow-card-hover transition-shadow duration-300 h-full flex flex-col">
+              <div className="bg-background rounded-2xl p-5 md:p-8 shadow-card hover:shadow-card-hover transition-shadow duration-300 h-full flex flex-col">
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: review.rating }).map((_, j) => (
                     <Star key={j} className="w-4 h-4 fill-primary text-primary" />
@@ -95,7 +95,7 @@ export const Reviews = () => {
             <div className="grid md:grid-cols-2 gap-8 items-start">
 
               {/* Yandex Maps reviews widget */}
-              <div style={{ width: "100%", height: 800, overflow: "hidden", position: "relative" }}>
+              <div style={{ width: "100%", height: "clamp(420px, 70vh, 800px)", overflow: "hidden", position: "relative" }}>
                 <iframe
                   style={{ width: "100%", height: "100%", border: "1px solid #e6e6e6", borderRadius: 8, boxSizing: "border-box" }}
                   src="https://yandex.ru/maps-reviews-widget/180515477217?comments"
@@ -112,7 +112,7 @@ export const Reviews = () => {
               </div>
 
               {/* ProDoctors big widget */}
-              <div style={{ height: 800, overflow: "hidden", position: "relative", border: "1px solid #e6e6e6", borderRadius: 8 }}>
+              <div style={{ height: "clamp(420px, 70vh, 800px)", overflow: "hidden", position: "relative", border: "1px solid #e6e6e6", borderRadius: 8 }}>
               <div
                 id="pd_widget_big"
                 data-lpu="103758"

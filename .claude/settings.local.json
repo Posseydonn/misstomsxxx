@@ -18,7 +18,16 @@
       "WebFetch(domain:composio.dev)",
       "Bash(npx skills:*)",
       "Bash(ls \"c:/Users/глебчик/Desktop/flawless-smile-hub/src/assets/\"*.webp)",
-      "Bash(npx tsc:*)"
-    ]
+      "Bash(npx tsc:*)",
+      "Bash(node -e \"require\\(''sharp''\\)\")",
+      "Bash(node -e ':*)",
+      "Bash(winget --version)",
+      "Bash(choco --version)",
+      "Bash(wsl --status)",
+      "Bash(where winget:*)",
+      "Bash(powershell.exe -Command \"winget --version\")",
+      "Bash(powershell.exe -Command \"Get-Command winget -ErrorAction SilentlyContinue | Select-Object -ExpandProperty Source\")"
+    ],
+    "defaultMode": "bypassPermissions"
   }
 }

@@ -46,14 +46,14 @@ const steps = [
 
 export const Process = () => {
   return (
-    <section className="py-16 md:py-20 bg-background">
+    <section className="py-10 md:py-20 bg-background">
       <div className="container mx-auto px-6">
         <ScrollReveal>
-          <div className="text-center max-w-3xl mx-auto mb-14">
+          <div className="text-center max-w-3xl mx-auto mb-8 md:mb-14">
             <p className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">
               Как мы работаем
             </p>
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1]">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1]">
               5 шагов к идеальной улыбке
             </h2>
           </div>

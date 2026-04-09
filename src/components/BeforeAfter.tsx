@@ -75,13 +75,13 @@ export const BeforeAfter = () => {
   }, [emblaApi, onSelect]);
 
   return (
-    <section id="results" className="py-16 md:py-20 bg-surface">
+    <section id="results" className="py-10 md:py-20 bg-surface">
       <div className="container mx-auto px-6">
         <ScrollReveal>
-          <div className="flex items-end justify-between mb-12">
+          <div className="flex items-end justify-between mb-7 md:mb-12">
             <div className="max-w-2xl">
               <p className="text-sm font-semibold uppercase tracking-widest text-accent mb-4">Результаты</p>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-[1.1]">
+              <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-foreground leading-[1.1]">
                 Реальные результаты наших пациентов
               </h2>
             </div>

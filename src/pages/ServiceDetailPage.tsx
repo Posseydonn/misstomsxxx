@@ -8,7 +8,7 @@ import {
   Star, Shield, Award, MessageCircle, MapPin,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import clinicChair from "@/assets/orig_customized (2).jpg";
+import clinicChair from "@/assets/orig_customized (2).webp";
 import clinicKavoCT from "@/assets/clinic-kavo-ct.webp";
 import clinicLounge from "@/assets/clinic-lounge.webp";
 
