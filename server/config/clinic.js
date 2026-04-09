@@ -37,7 +37,7 @@ export const DOCTOR_CATALOG = [
     id: 'podoprigora',
     name: 'Подопригора Оксана Викторовна',
     role: 'Терапевт-эндодонтист',
-    medflex_doctor_id: null,
+    medflex_doctor_id: 981249,
     speciality_ids: [305],
   },
   {

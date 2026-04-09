@@ -152,7 +152,8 @@ async function handleAvailabilityRequest({ history, trimmedMessage, sessionId, p
         : await getAvailabilityDigest({
             lpuId,
             days: 7,
-            maxSlotsPerDoctor: query.dateIso ? Number.MAX_SAFE_INTEGER : 8,
+            maxSlotsPerDoctor:
+              query.dateIso || query.doctorIds.length > 0 ? Number.MAX_SAFE_INTEGER : 8,
             doctorIds: query.doctorIds,
             dateIso: query.dateIso,
           });

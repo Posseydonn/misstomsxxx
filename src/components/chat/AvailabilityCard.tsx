@@ -32,7 +32,7 @@ type NormalizedDoctor = {
 };
 
 type TimeGroup = {
-  id: 'morning' | 'day' | 'evening';
+  id: 'morning' | 'day' | 'evening' | 'other';
   title: string;
   range: string;
   fromHour: number;
@@ -153,14 +153,31 @@ export function AvailabilityCard({
   }, [activeDoctor, selectedDate]);
 
   const groupedTimes = useMemo(
-    () =>
-      TIME_GROUPS.map((group) => ({
+    () => {
+      const baseGroups = TIME_GROUPS.map((group) => ({
         ...group,
         times: timesOnDate.filter((time) => {
           const hour = hourFromTime(time);
           return hour >= group.fromHour && hour <= group.toHour;
         }),
-      })),
+      }));
+
+      const covered = new Set(baseGroups.flatMap((group) => group.times));
+      const otherTimes = timesOnDate.filter((time) => !covered.has(time));
+
+      if (otherTimes.length > 0) {
+        baseGroups.push({
+          id: 'other',
+          title: 'Другие',
+          range: 'вне диапазона',
+          fromHour: -1,
+          toHour: -1,
+          times: otherTimes,
+        });
+      }
+
+      return baseGroups;
+    },
     [timesOnDate]
   );
 
@@ -407,11 +424,13 @@ function DoctorAvatar({
 }
 
 function parseSlot(raw: string): Slot | null {
-  const match = String(raw).trim().match(/^(\d{2}\.\d{2}\.\d{4})\s+(\d{2}:\d{2})$/);
+  const match = String(raw)
+    .trim()
+    .match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})\s+(\d{1,2}):(\d{2})(?::\d{2})?$/);
   if (!match) return null;
   return {
-    date: match[1],
-    time: match[2],
+    date: `${match[1].padStart(2, '0')}.${match[2].padStart(2, '0')}.${match[3]}`,
+    time: `${match[4].padStart(2, '0')}:${match[5]}`,
   };
 }
 
