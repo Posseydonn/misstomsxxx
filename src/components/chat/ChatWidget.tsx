@@ -61,7 +61,7 @@ export function ChatWidget() {
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
 
-  const { messages, isTyping, sendMessage, addGreeting } = useChat();
+  const { messages, isTyping, sendMessage, sendClientAction, addGreeting } = useChat();
 
   const openChat = useCallback(() => {
     setIsOpen(true);
@@ -71,11 +71,17 @@ export function ChatWidget() {
   useTriggers({ onTrigger: openChat, isOpen });
 
   useEffect(() => {
-    if (isOpen && !greetingSent) {
+    if (messages.length > 0 && !greetingSent) {
+      setGreetingSent(true);
+    }
+  }, [greetingSent, messages.length]);
+
+  useEffect(() => {
+    if (isOpen && !greetingSent && messages.length === 0) {
       addGreeting(getGreeting(location.pathname));
       setGreetingSent(true);
     }
-  }, [isOpen, greetingSent, addGreeting, location.pathname]);
+  }, [isOpen, greetingSent, addGreeting, location.pathname, messages.length]);
 
   useEffect(() => {
     if (isOpen) {
@@ -100,15 +106,67 @@ export function ChatWidget() {
     ({ doctorName, date, time }: SlotPickPayload) => {
       if (isTyping) return;
       const text = `Запиши меня к ${doctorName} на ${date} в ${time}`;
-      sendMessage(text, location.pathname);
+      sendClientAction(
+        {
+          type: 'slot_pick',
+          params: { doctorName, date, time },
+        },
+        text,
+        location.pathname
+      );
     },
-    [isTyping, sendMessage, location.pathname]
+    [isTyping, sendClientAction, location.pathname]
+  );
+
+  const handleBookingFormSubmit = useCallback(
+    ({ name, phone }: { name: string; phone: string }) => {
+      if (isTyping) return;
+      sendClientAction(
+        {
+          type: 'booking_form_submit',
+          params: { name, phone },
+        },
+        'Оставляю контакты для подтверждения записи.',
+        location.pathname
+      );
+    },
+    [isTyping, sendClientAction, location.pathname]
   );
 
   const handleAdminRequest = useCallback(() => {
     if (isTyping) return;
     sendMessage('Передайте заявку администратору, пожалуйста.', location.pathname);
   }, [isTyping, sendMessage, location.pathname]);
+
+  const handleCancellationLookup = useCallback(
+    (claimId: string) => {
+      if (isTyping) return;
+      sendClientAction(
+        {
+          type: 'cancellation_lookup',
+          params: { claimId },
+        },
+        `Код записи: ${claimId}`,
+        location.pathname
+      );
+    },
+    [isTyping, sendClientAction, location.pathname]
+  );
+
+  const handleCancellationConfirm = useCallback(
+    (claimId?: string) => {
+      if (isTyping) return;
+      sendClientAction(
+        {
+          type: 'cancellation_confirm',
+          params: { claimId },
+        },
+        'Подтверждаю отмену записи.',
+        location.pathname
+      );
+    },
+    [isTyping, sendClientAction, location.pathname]
+  );
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -161,6 +219,9 @@ export function ChatWidget() {
                 isTyping={isTyping}
                 onSlotPick={handleSlotPick}
                 onAdminRequest={handleAdminRequest}
+                onBookingFormSubmit={handleBookingFormSubmit}
+                onCancellationLookup={handleCancellationLookup}
+                onCancellationConfirm={handleCancellationConfirm}
               />
             ))}
             {isTyping && <TypingIndicator />}

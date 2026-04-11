@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import chatRouter from './routes/chat.js';
-import { initDb } from './services/postgres.js';
+import { ensureServerReady } from './bootstrap.js';
 
 const PORT = process.env.PORT || 3001;
 const configuredOrigins =
@@ -37,7 +37,7 @@ app.use(
       if (origin && ALLOWED_ORIGINS.has(origin)) return callback(null, true);
       callback(new Error(`CORS: origin ${origin} not allowed`));
     },
-    methods: ['POST', 'OPTIONS'],
+    methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: ['Content-Type'],
   })
 );
@@ -48,7 +48,7 @@ app.use(express.json({ limit: '16kb' }));
 // Rate limiting: 30 requests/min per IP
 const limiter = rateLimit({
   windowMs: 60 * 1000,
-  max: 30,
+  max: process.env.NODE_ENV === 'production' ? 30 : 200,
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Слишком много запросов. Попробуйте через минуту.' },
@@ -69,7 +69,7 @@ app.use((err, _req, res, _next) => {
 // Start
 async function start() {
   try {
-    await initDb();
+    await ensureServerReady();
     app.listen(PORT, () => {
       console.log(`[Server] running on port ${PORT}`);
       console.log(`[Server] CORS allowed for: ${Array.from(ALLOWED_ORIGINS).join(', ')}`);

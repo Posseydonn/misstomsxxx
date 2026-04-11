@@ -30,7 +30,7 @@ export async function getSchedule({ lpuIds, specialityIds, dateStart, days = 14,
   if (dateStart) q.set('date_start', dateStart);
   q.set('days', String(days));
   if (timesOfDay?.length) {
-    timesOfDay.forEach((t) => q.append('times_of_day', t));
+    timesOfDay.forEach((value) => q.append('times_of_day', value));
   }
   if (process.env.MEDFLEX_TOWN_ID) {
     q.set('town_id', process.env.MEDFLEX_TOWN_ID);
@@ -46,11 +46,13 @@ export async function createAppointment({
   preferredTime = '',
   service = '',
   doctorId,
+  doctorName = '',
   lpuId,
   specialityId,
   price = 0,
+  selectedSlot = null,
 }) {
-  const timesOfDay = inferTimesOfDay(preferredTime);
+  const timesOfDay = inferTimesOfDay(preferredTime || selectedSlot?.time || '');
   const scheduleRows = await getSchedule({
     lpuIds: String(lpuId),
     specialityIds: String(specialityId),
@@ -58,7 +60,7 @@ export async function createAppointment({
     timesOfDay,
   });
 
-  const slot = pickBestSlot(scheduleRows, doctorId, lpuId, preferredTime);
+  const slot = pickBestSlot(scheduleRows, doctorId, lpuId, preferredTime, selectedSlot);
   if (!slot) {
     throw new Error('Нет доступных слотов в расписании Medflex');
   }
@@ -68,8 +70,8 @@ export async function createAppointment({
 
   const body = {
     doctor: {
-      id: doctorId,
-      lpu_id: lpuId,
+      id: slot.doctor_id,
+      lpu_id: slot.lpu_id,
       speciality_id: specialityId,
     },
     appointment: {
@@ -93,11 +95,15 @@ export async function createAppointment({
 
   const claimId = result?.claim_id;
   const [datePart, timePart] = slot.dt_start.split(' ');
+  const resolvedDoctorName =
+    doctorName ||
+    DOCTOR_CATALOG.find((doctor) => doctor.medflex_doctor_id === slot.doctor_id)?.name ||
+    String(slot.doctor_id);
 
   return {
     date: datePart,
     time: timePart?.slice(0, 5) ?? '',
-    doctor: String(doctorId),
+    doctor: resolvedDoctorName,
     confirmationCode: claimId ?? '',
   };
 }
@@ -119,9 +125,9 @@ export async function getAvailabilityDigest({
   const scheduleRows = await getSchedule({ lpuIds: String(lpuId), days });
 
   const doctorByMedflexId = new Map(
-    DOCTOR_CATALOG.filter((d) => Number.isInteger(d.medflex_doctor_id)).map((d) => [
-      d.medflex_doctor_id,
-      d,
+    DOCTOR_CATALOG.filter((doctor) => Number.isInteger(doctor.medflex_doctor_id)).map((doctor) => [
+      doctor.medflex_doctor_id,
+      doctor,
     ])
   );
 
@@ -131,7 +137,8 @@ export async function getAvailabilityDigest({
     .map((row) => {
       const knownDoctor = doctorByMedflexId.get(row.doctor_id);
       if (!knownDoctor) return null;
-      const cellsByDate = dateIso
+
+      const filteredCells = dateIso
         ? row.cells.filter((cell) => String(cell.dt_start).startsWith(`${dateIso} `))
         : row.cells;
 
@@ -140,21 +147,21 @@ export async function getAvailabilityDigest({
         name: knownDoctor.name,
         role: knownDoctor.role,
         specialityIds: row.specialities || [],
-        totalSlots: cellsByDate.length,
-        slots: cellsByDate.slice(0, maxSlotsPerDoctor).map((cell) => formatSlot(cell.dt_start)),
+        totalSlots: filteredCells.length,
+        slots: filteredCells.slice(0, maxSlotsPerDoctor).map((cell) => formatSlot(cell.dt_start)),
       };
     })
     .filter(Boolean)
     .filter((row) => row.totalSlots > 0)
     .sort((a, b) => a.name.localeCompare(b.name, 'ru'));
 
-  const onlineIds = new Set(onlineDoctors.map((d) => d.doctorId));
-  const offlineDoctors = DOCTOR_CATALOG.filter((d) => {
-    if (doctorIds.length && Number.isInteger(d.medflex_doctor_id)) {
-      return doctorIds.includes(d.medflex_doctor_id) && !onlineIds.has(d.medflex_doctor_id);
+  const onlineIds = new Set(onlineDoctors.map((doctor) => doctor.doctorId));
+  const offlineDoctors = DOCTOR_CATALOG.filter((doctor) => {
+    if (doctorIds.length && Number.isInteger(doctor.medflex_doctor_id)) {
+      return doctorIds.includes(doctor.medflex_doctor_id) && !onlineIds.has(doctor.medflex_doctor_id);
     }
-    return !Number.isInteger(d.medflex_doctor_id) || !onlineIds.has(d.medflex_doctor_id);
-  }).map((d) => ({ name: d.name, role: d.role }));
+    return !Number.isInteger(doctor.medflex_doctor_id) || !onlineIds.has(doctor.medflex_doctor_id);
+  }).map((doctor) => ({ name: doctor.name, role: doctor.role }));
 
   return {
     onlineDoctors,
@@ -171,12 +178,24 @@ function inferTimesOfDay(preferredTime = '') {
   return [];
 }
 
-function pickBestSlot(scheduleRows, doctorId, lpuId, preferredTime = '') {
+function pickBestSlot(scheduleRows, doctorId, lpuId, preferredTime = '', selectedSlot = null) {
   let rows = scheduleRows.filter(
-    (r) => r.doctor_id === doctorId && r.lpu_id === lpuId && r.cells?.length
+    (row) => row.doctor_id === doctorId && row.lpu_id === lpuId && row.cells?.length
   );
-  if (!rows.length) rows = scheduleRows.filter((r) => r.lpu_id === lpuId && r.cells?.length);
+  if (!rows.length) {
+    rows = scheduleRows.filter((row) => row.lpu_id === lpuId && row.cells?.length);
+  }
   if (!rows.length) return null;
+
+  if (selectedSlot?.dateIso && selectedSlot?.time) {
+    const target = `${selectedSlot.dateIso} ${selectedSlot.time}`;
+    for (const row of rows) {
+      const exactCell = row.cells.find((cell) => String(cell.dt_start).startsWith(target));
+      if (exactCell) {
+        return { ...exactCell, doctor_id: row.doctor_id, lpu_id: row.lpu_id };
+      }
+    }
+  }
 
   const lower = preferredTime.toLowerCase();
   for (const row of rows) {
@@ -217,3 +236,5 @@ function formatSlot(dtStart) {
   const [yyyy, mm, dd] = datePart.split('-');
   return `${dd}.${mm}.${yyyy} ${timePart.slice(0, 5)}`;
 }
+
+export { normalizePhone };

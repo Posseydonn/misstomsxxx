@@ -1,4 +1,7 @@
 import { BookingCard } from './BookingCard';
+import { BookingFormCard } from './BookingFormCard';
+import { CancellationCard } from './CancellationCard';
+import { HandoffCard } from './HandoffCard';
 import { AvailabilityCard, type SlotPickPayload } from './AvailabilityCard';
 import type { Message } from '@/hooks/useChat';
 
@@ -7,6 +10,9 @@ interface ChatMessageProps {
   isTyping?: boolean;
   onSlotPick?: (slot: SlotPickPayload) => void;
   onAdminRequest?: () => void;
+  onBookingFormSubmit?: (values: { name: string; phone: string }) => void;
+  onCancellationLookup?: (claimId: string) => void;
+  onCancellationConfirm?: (claimId?: string) => void;
 }
 
 export function ChatMessage({
@@ -14,6 +20,9 @@ export function ChatMessage({
   isTyping = false,
   onSlotPick,
   onAdminRequest,
+  onBookingFormSubmit,
+  onCancellationLookup,
+  onCancellationConfirm,
 }: ChatMessageProps) {
   const isBot = message.role === 'assistant';
 
@@ -44,7 +53,31 @@ export function ChatMessage({
             onAdminRequest={onAdminRequest}
           />
         )}
+        {message.bookingForm && (
+          <BookingFormCard
+            bookingForm={message.bookingForm}
+            isTyping={isTyping}
+            onSubmit={onBookingFormSubmit}
+          />
+        )}
         {message.booking && <BookingCard booking={message.booking} />}
+        {message.cancellation && (
+          <CancellationCard
+            cancellation={message.cancellation}
+            isTyping={isTyping}
+            onLookup={onCancellationLookup}
+            onConfirm={onCancellationConfirm}
+          />
+        )}
+        {message.action === 'handoff' && (
+          <HandoffCard
+            content={message.content}
+            bookingForm={message.bookingForm}
+            state={message.state}
+            fallbackReason={message.fallbackReason}
+            meta={message.meta}
+          />
+        )}
       </div>
     </div>
   );
